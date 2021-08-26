@@ -1,0 +1,12 @@
+#!/bin/bash
+
+path=$PWD/src
+out="build"
+files=()
+for file in $path/*; do 
+    if [[ ! -d $file ]] ; then
+        files+="$file "
+    fi
+done 
+
+g++ -I $PWD/src/headers/ $files -o $out
