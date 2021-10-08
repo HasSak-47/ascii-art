@@ -1,7 +1,7 @@
 #include<exception>
 #include<iostream>
 #include<fstream>
-#include<image.h>
+#include"headers/image.h"
 
 using namespace sk;
 
@@ -11,11 +11,16 @@ int assign_color(char* str, color col){
     return 9;
 }
 
+int get_color(byte* pixel){
+    return (
+        (*(pixel + 0) > 127) * 1 +
+        (*(pixel + 1) > 127) * 2 +
+        (*(pixel + 2) > 127) * 4 +
+        (*(pixel + 3) > 127) * 8
+    );
+}
+
 int main(int argc, char* argv[]){
-    if(argc == 0 ){
-        std::cerr << "what the fuck!\n";
-        return -1;
-    }
     if(argc == 1){
         std::cerr << "no image provided\n";
         return 1;
@@ -38,39 +43,17 @@ int main(int argc, char* argv[]){
         for(size_t i = 0; i <  img.height; ++i){
             for(size_t j = 0; j <  img.width; ++j){
                 int index = 4 * (i * img.width + j);
-                bool colors[4] = {
-                    img.data[index + 0] > 127,
-                    img.data[index + 1] > 127,
-                    img.data[index + 2] > 127,
-                    img.data[index + 3] > 127
-                };
-                if(!colors[3]){
-                    if(index + 7 <= max_img_size && index != 0){
-                        if(img.data[index + 4 + 3] < 127 && img.data[index - 4 + 3] < 127) txt_data[txt_index++] = ' ';
-                        else {
-                            if(prev_color != color::white){
-                                assign_color(&txt_data[txt_index], color::white);
-                                txt_data[txt_index += 9] = '#';
-                                txt_index++;
-                                prev_color = color::white;
-                            }
-                            else{
-                                txt_data[txt_index++] = '#';
-                            }
-                        }
-                    }
-                    else txt_data[txt_index++] = ' ';
-                }
+                int colors = get_color(img.data + index);
+                if(colors <= 7 || (colors - 8) == 0) txt_data[txt_index++] = ' ';
                 else{
-                    if((color)(colors[0] + 2 * colors[1] + 4 * colors[2]) != prev_color){
-                        assign_color(&txt_data[txt_index], (color)(colors[0] + 2 * colors[1] + 4 * colors[2]) );
-                        txt_data[txt_index += 9] = '#';
-                        txt_index++;
-                        prev_color = (color)(colors[0] + 2 * colors[1] + 4 * colors[2]);
+                    colors -= 8;
+                    if((color)colors != prev_color){
+                        std::cout << colors << '\n';
+                        assign_color(&txt_data[txt_index], (color)colors);
+                        txt_index += 9;
+                        prev_color = (color)colors;
                     }
-                    else{
-                        txt_data[txt_index++] = '#';
-                    }
+                    txt_data[txt_index++] = '#';
                 }
             }
             txt_data[txt_index++] = ' ';
@@ -81,10 +64,7 @@ int main(int argc, char* argv[]){
         if(!file.is_open()) throw std::runtime_error("file not found!");
         file.write(txt_data, txt_index);
         file.close();
-
-        std::cout << "line: " << __LINE__ << '\n';
         delete[] txt_data;
-        std::cout << "line: " << __LINE__ << '\n';
         
     }catch(std::runtime_error& err){
         std::cout<< err.what() << '\n';
