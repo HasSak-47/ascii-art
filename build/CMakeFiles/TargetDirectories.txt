@@ -1,0 +1,3 @@
+/mnt/e/terminal_pic/build/CMakeFiles/rebuild_cache.dir
+/mnt/e/terminal_pic/build/CMakeFiles/edit_cache.dir
+/mnt/e/terminal_pic/build/CMakeFiles/trees.dir

@@ -1,15 +1,15 @@
 #include<stdexcept>
 #include<iostream>
-#include<image.h>
+#include"../headers/image.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include<stb_image.h>
+#include"../headers/stb_image.h"
 
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include<stb_image_resize.h>
+#include"../headers/stb_image_resize.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include<stb_image_write.h>
+#include"../headers/stb_image_write.h"
 
 namespace sk{
     char* color_text(color foreground, color background){
@@ -38,6 +38,8 @@ namespace sk{
             channels
         );
         if(!success){
+            if(this->data) free(this->data);
+            if(new_data) free(new_data);
             throw std::runtime_error("could not resize img!");
             return;
         }
