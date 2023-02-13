@@ -1,6 +1,26 @@
 use image;
 use std::io::prelude::Write;
 
+struct Vector<T: Default>{
+    _vals : [T; 2],
+}
+
+// so much boiler plateeeeeeeeeeee
+impl<T> Vector<T> where
+T: Default
+{
+    fn new() -> Self{Vector {_vals :[T::default(), T::default()]}}
+    fn     x(&self    ) -> &T    {&self._vals[0]}
+    fn x_mut(&mut self) -> &mut T{&mut self._vals[0]}
+    fn     y(&self    ) -> &T    {&self._vals[1]}
+    fn y_mut(&mut self) -> &mut T{&mut self._vals[1]}
+}
+
+
+struct Geometry{
+    pub points: Vector<u32>,
+}
+
 fn main() {
     let mut img = image::open("test.png").unwrap();
     let image = img.resize_exact(100, 50, image::imageops::Nearest).into_luma8();
@@ -8,6 +28,12 @@ fn main() {
     // let mut char_map = [[' '; 100]; 100];
 
     let intensities = [' ', '.', ':', ';', '+', '=', '$', '&'];
+    let slopes = [
+        '-', // 0.0
+        '/', // 60.0
+        '|', // 90.0
+        '\\',// -60.0
+    ];
 
     let mut file = std::fs::File::create("tests/test.txt").unwrap();
     let mut write = String::new();
