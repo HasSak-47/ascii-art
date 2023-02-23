@@ -1,3 +1,5 @@
+mod edges;
+
 use image;
 use std::io::prelude::Write;
 
