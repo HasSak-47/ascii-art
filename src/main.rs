@@ -25,29 +25,32 @@ struct Geometry{
 
 fn main() {
     let mut img = image::open("test.png").unwrap();
-    let image = img.resize_exact(100, 50, image::imageops::Nearest).into_luma8();
+    let height = 22;
+    let width  = height * 2;
+
+    let image = img.resize_exact(width * 2, height * 3, image::imageops::Nearest).into_luma8();
 
     // let mut char_map = [[' '; 100]; 100];
 
-    let intensities = [' ', '.', ':', ';', '+', '=', '$', '&'];
-    let slopes = [
-        '-', // 0.0
-        '/', // 60.0
-        '|', // 90.0
-        '\\',// -60.0
-    ];
-
     let mut file = std::fs::File::create("tests/test.txt").unwrap();
-    let mut write = String::new();
-    for j in 0..50{
-        for i in 0..100{
-            println!("i: {} j: {}", i, j);
-            let inten = (image.get_pixel(i, j).0[0] as f32 * 8.0 / 255.0) as usize;
-
-            write.push(intensities[inten as usize]);
+    let mut write = "\n".to_string();
+    for j in 0..height{
+        for i in 0..width{
+            let mut char_id : usize = 0;
+            for jd in 0..3u32{
+                for id in 0..2u32{
+                    let val : usize = 1 << (jd + id * 3) as usize;
+                    let valid = image.get_pixel(i * 2 + id, j * 3 + jd).0[0] >= 1;
+                    char_id |= val * valid as usize;
+                }
+            }
+            // print!(" {:02x}", char_id);
+            write.push(edges::CHARACTERS[char_id]);
         }
+        println!();
         write.push('\n');
     }
 
+    // println!("{}", write);
     file.write(write.as_bytes()).unwrap();
 }
