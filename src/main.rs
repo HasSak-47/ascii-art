@@ -47,7 +47,6 @@ fn main() {
             // print!(" {:02x}", char_id);
             write.push(edges::CHARACTERS[char_id]);
         }
-        println!();
         write.push('\n');
     }
 
