@@ -1,6 +1,7 @@
 mod edges;
 
 use image;
+use crossterm;
 use std::io::prelude::Write;
 
 struct Vector<T: Default>{
@@ -31,7 +32,6 @@ fn main() {
     let image = img.resize_exact(width * 2, height * 3, image::imageops::Nearest).into_luma8();
 
     // let mut char_map = [[' '; 100]; 100];
-
     let mut file = std::fs::File::create("tests/test.txt").unwrap();
     let mut write = "\n".to_string();
     for j in 0..height{
