@@ -1,31 +1,10 @@
 mod edges;
 
 use image;
-use crossterm;
 use std::io::prelude::Write;
 
-struct Vector<T: Default>{
-    _vals : [T; 2],
-}
-
-// so much boiler plateeeeeeeeeeee
-impl<T> Vector<T> where
-T: Default
-{
-    fn new() -> Self{Vector {_vals :[T::default(), T::default()]}}
-    fn     x(&self    ) -> &T    {&self._vals[0]}
-    fn x_mut(&mut self) -> &mut T{&mut self._vals[0]}
-    fn     y(&self    ) -> &T    {&self._vals[1]}
-    fn y_mut(&mut self) -> &mut T{&mut self._vals[1]}
-}
-
-
-struct Geometry{
-    pub points: Vector<u32>,
-}
-
 fn main() {
-    let mut img = image::open("test.png").unwrap();
+    let img = image::open("test.png").unwrap();
     let height = 22;
     let width  = height * 2;
 
