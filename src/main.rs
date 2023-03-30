@@ -2,16 +2,51 @@ mod edges;
 
 use image;
 use std::io::prelude::Write;
+use std::env;
+use std::path::Path;
+
+fn make_art<S: AsRef<Path> + ToString>(in_path: S) -> String {
+    let img = image::open(&in_path).unwrap();
+    let height = 22;
+    let width = height * 2;
+    let image = img.resize_exact(width * 2, height * 3, image::imageops::Nearest).into_rgb8();
+    let out_path = in_path.to_string() + ".txt";
+    let out_file = std::fs::File::create("out_path").unwrap();
+
+    let mut out = String::new();
+
+    for j in 0..height{
+        for i in 0..width{
+
+        }
+    }
+
+
+    out
+}
 
 fn main() {
-    let img = image::open("test.png").unwrap();
+    let mut args : Vec<String> = env::args().collect();
+    if args.len() < 2{
+        println!("usage [name] file1 file2 file3");
+        return;
+    }
+
+    args.remove(0);
+
+    let img = match image::open(args[0].clone()){
+        Ok(k) => k,
+        Err(_) => {
+            println!("file {args:?} not found");
+            return;
+        }
+    };
     let height = 22;
     let width  = height * 2;
-
     let image = img.resize_exact(width * 2, height * 3, image::imageops::Nearest).into_luma8();
 
     // let mut char_map = [[' '; 100]; 100];
-    let mut file = std::fs::File::create("tests/test.txt").unwrap();
+    let mut file = std::fs::File::create(format!("{}.txt", args[0])).unwrap();
     let mut write = "\n".to_string();
     for j in 0..height{
         for i in 0..width{
