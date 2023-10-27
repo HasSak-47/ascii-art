@@ -5,7 +5,9 @@ use std::io::prelude::Write;
 use std::{env, default};
 
 mod parser;
+mod parameters;
 use crate::parser::parse;
+use crate::parameters::*;
 
 #[allow(dead_code)]
 #[derive(Debug, Default, Clone)]
@@ -140,7 +142,7 @@ fn process_rgba(p: u32, img: image::RgbaImage) -> String{
 
 
 fn process_image(mut opts: Options) {
-    let img = image::open(&opts.in_path) .expect("file not found!");
+    let img = image::open(&opts.in_path).expect("file not found!");
     let dims = img.dimensions();
     let ratio = dims.1 as f32 / dims.0 as f32;
     opts.color_range = match img.color(){
