@@ -1,1 +1,40 @@
-name="ascii-art"\n
+[project]
+name="ascii-art"
+version="0.0.0"
+edition="0.0.0"
+
+[[todo]]
+name="BW color art"
+difficulty = 0.1
+priority = 0.4
+
+[[todo.subprojcet]]
+name="BW ascii art"
+difficulty = 0.3
+priority = 0.4
+
+[[todo]]
+name="RGBA color art"
+difficulty = 0.2
+priority = 0.1
+
+[[todo.subprojcet]]
+name="BW ascii art"
+difficulty = 0.3
+priority = 0.4
+
+[[todo]]
+name="RGB color art"
+difficulty = 0.0
+priority = 0.0
+
+[[todo.subproject]]
+name="RGB ascii art"
+difficulty = 0.3
+priority = 0.0
+
+[[done]]
+name="RGB color art"
+difficulty = 0.3
+priority = 0.1
+
