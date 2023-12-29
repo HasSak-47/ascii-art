@@ -1,5 +1,6 @@
 #[allow(dead_code)]
-#[derive(Debug, Default, Clone)]
+
+#[derive(Debug, Clone, Default, PartialEq)]
 pub struct RgbTransform{
     r: (f32, f32, f32, f32),
     b: (f32, f32, f32, f32),
@@ -7,7 +8,7 @@ pub struct RgbTransform{
     a: (f32, f32, f32, f32),
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq)]
 pub enum ColorRange{
     #[default]
     Undefined,
@@ -22,7 +23,7 @@ pub enum ColorRange{
 pub enum Output{
     #[default]
     Block,
-    Smart,
+    Ascii,
     Braille,
     Single(char),
 }
