@@ -1,40 +1,39 @@
 [project]
-name="ascii-art"
-version="0.0.0"
-edition="0.0.0"
+name = "ascii-art"
+version = "0.0.0"
+edition = "0.1.0"
 
 [[todo]]
-name="BW color art"
-difficulty = 0.1
-priority = 0.4
+name = "BW color art"
+priority = 0.4000000059604645
+difficulty = 0.10000000149011612
 
-[[todo.subprojcet]]
-name="BW ascii art"
-difficulty = 0.3
-priority = 0.4
-
-[[todo]]
-name="RGBA color art"
-difficulty = 0.2
-priority = 0.1
-
-[[todo.subprojcet]]
-name="BW ascii art"
-difficulty = 0.3
-priority = 0.4
+[[todo.todo]]
+name = "BW ascii art"
+priority = 0.4000000059604645
+difficulty = 0.30000001192092896
 
 [[todo]]
-name="RGB color art"
+name = "RGBA color art"
+priority = 0.10000000149011612
+difficulty = 0.20000000298023224
+
+[[todo.todo]]
+name = "BW ascii art"
+priority = 0.4000000059604645
+difficulty = 0.30000001192092896
+
+[[todo]]
+name = "RGB color art"
+priority = 0.0
 difficulty = 0.0
-priority = 0.0
 
-[[todo.subproject]]
-name="RGB ascii art"
-difficulty = 0.3
+[[todo.todo]]
+name = "RGB ascii art"
 priority = 0.0
+difficulty = 0.30000001192092896
 
 [[done]]
-name="RGB color art"
-difficulty = 0.3
-priority = 0.1
-
+name = "RGB color art"
+priority = 0.10000000149011612
+difficulty = 0.30000001192092896

@@ -1,7 +1,7 @@
 mod edges;
 
+use image::{DynamicImage, ImageBuffer, Pixel};
 use image::{self, GenericImageView};
-use std::io::prelude::Write;
 use std::env;
 
 mod parser;
@@ -16,62 +16,34 @@ pub struct Options{
     out_path   : String,
     size       : (u32, u32),
     color_range: ColorRange,
+    out_type   : Output,
 }
 
+fn cmp_pixels(a: image::Rgba<u8>, b: image::Rgba<u8>, range: ColorRange) -> bool{
+    use ColorRange as RG;
+    match range{
+        RG::Luma(_) => a.to_luma() == b.to_luma(),
+        RG::Rgb(_) => a.to_rgb() == b.to_rgb(),
 
-fn write_rgb_color(p: u32, c: (u8, u8, u8)) -> String{
-    format!("\x1b[48;2;{};{};{}m", c.0, c.1, c.2)
-}
-
-fn write_rgba_color(p: u32, c: (u8, u8, u8)) -> String{
-    format!("\x1b[38;2;{};{};{}m", c.0, c.1, c.2)
-}
-
-fn process_rgb(p: u32, img: image::RgbImage) -> String{
-    let p = p as u8;
-    let mut r = String::new();
-    let mut latest_color = (0, 0, 0);
-    for row in img.rows(){
-        for pixel in row{
-            let current_color = ( pixel.0[0], pixel.0[1], pixel.0[2],);
-
-            if current_color != latest_color{
-                latest_color = current_color;
-                r += &write_rgb_color(p as u32, current_color);
-            }
-            r +=  " " ;
-        }
-        r += "\n";
+        _ => a == b,
     }
-    latest_color = (0, 0, 0);
-    r += &write_rgb_color(p as u32, latest_color);
-
-    r
 }
 
-fn process_rgba(p: u32, img: image::RgbaImage) -> String{
-    let p = p as u8;
-    let mut r = String::new();
-    let mut latest_color = (0, 0, 0);
-    for row in img.rows(){
-        for pixel in row{
-            let current_color = (pixel.0[0], pixel.0[1], pixel.0[2]);
+static NONE_NONE : image::Rgba<u8> = image::Rgba([0,0,0,0]);
+static NONE_FULL : image::Rgba<u8> = image::Rgba([0,0,0,255]);
 
-            if current_color != latest_color{
-                latest_color = current_color;
-                r += &write_rgba_color(p as u32, current_color);
-            }
-            r += if pixel.0[3] != 0 {"#"} else { " " };
-        }
-        println!();
-        r += "\n";
-    }
-    latest_color = (0, 0, 0);
-    r += &write_rgb_color(p as u32, latest_color);
-
-    r
+fn handle_luma(current_color: image::Rgba<u8>, prev_color: image::Rgba<u8>, range: u8) -> String {
+    let luma_color = current_color.to_luma();
+    let luma = (luma_color.0[0] * range) / range;
+    format!("\x1b[38;2;{luma};{luma};{luma}m")
 }
 
+fn handle_char(p: image::Rgba<u8>, c: char) -> char{
+    if p.0[0] != 0 && p.0[1] != 0 && p.0[2] != 0
+        { c }
+    else
+        { ' ' }
+}
 
 fn process_image(mut opts: Options) {
     let img = image::open(&opts.in_path).expect("file not found!");
@@ -80,29 +52,22 @@ fn process_image(mut opts: Options) {
     opts.color_range = match img.color(){
         image::ColorType::Rgb8 => ColorRange::Rgb(8),
         image::ColorType::Rgba8 => ColorRange::Rgba(8),
-        _ => {ColorRange::LumaAlpha(0)},
+        image::ColorType::L8 => ColorRange::Luma(8),
+        image::ColorType::La8 => ColorRange::LumaAlpha(8),
+        _ => panic!("color yet not implemented!"),
     };
-    println!("{opts:?}");
-    
-
-    let resized = if opts.size.1 == 0 {
-        let w = opts.size.0 * 2;
-        let h = opts.size.0 as f32 * ratio;
-        img.resize_exact(w, h as u32, image::imageops::Nearest)
+    if opts.size.1 == 0{
+        opts.size.1 = (opts.size.0 as f32 * ratio) as u32;
     }
-    else{
-        img.resize_exact(opts.size.0, opts.size.1, image::imageops::Nearest)
-    };
-
-    let img_ascii = match opts.color_range{
-        ColorRange::Rgba(p) => process_rgba(p as u32, resized.into_rgba8()),
-        _ => process_rgb(16, resized.into_rgb8()),
-    };
-
-    println!("{img_ascii}");
-    let mut file = std::fs::File::create(opts.out_path).unwrap();
-    file.write(img_ascii.as_bytes()).unwrap();
-
+    match opts.out_type {
+        Output::Braille => {
+            opts.size.0 *= 2;
+            opts.size.1 *= 4;
+        }
+        _ => {},
+    }
+    opts.size.0 *= 2;
+    let img = img.resize_exact(opts.size.0, opts.size.1, image::imageops::FilterType::Nearest);
 }
 
 fn main() {

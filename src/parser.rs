@@ -1,5 +1,5 @@
-use crate::ColorRange;
-use crate::Options;
+use crate::{Options, Output};
+use crate::parameters::*;
 
 pub trait Parse where Self: Sized{
     fn parse(s: &str) -> Self;
@@ -26,14 +26,13 @@ impl Parse for (u32, u32){
 
 impl Parse for ColorRange{
     fn parse(s: &str) -> Self {
-        println!("{s}");
-        let presicion= s.find('_');
+        let precision= s.find('_');
         let range_t = if let Some(p) = s.find('_'){
             &s[0..p]
         }
         else{s};
 
-        if presicion.is_none() {
+        if precision.is_none() {
             if "rgb" == range_t { return ColorRange::Rgb(8);}
             if "rgba" == range_t { return ColorRange::Rgba(8);}
             if "luma" == range_t { return ColorRange::Luma(8);}
@@ -41,6 +40,17 @@ impl Parse for ColorRange{
         }
 
         ColorRange::default()
+    }
+}
+
+impl Parse for Output{
+    fn parse(s: &str) -> Self {
+        if s == "smart" { return Output::Smart; }
+        else if s == "braille" { return Output::Braille; }
+        else if s == "Block"{ return Output::Block; }
+
+        let last = s.chars().nth(s.len() - 1).unwrap();
+        Output::Single(last)
     }
 }
 
@@ -74,11 +84,12 @@ pub fn parse_option<S : AsRef<str>>(arg: S) -> Options{
     }
     let s_chars : Vec<char> = arg.chars().collect();
     let s_chars_len = s_chars.len();
-
     let in_path     = locate(Some(0), s_chars_len, ':', &s_chars);
     let out_path    = locate(arg.find("out=")  , s_chars_len, ',', &s_chars);
     let size        = locate(arg.find("size=") , s_chars_len, ',', &s_chars);
     let color_range = locate(arg.find("color="), s_chars_len, ',', &s_chars);
+    let out_type    = locate(arg.find("type="), s_chars_len, ',', &s_chars);
+
 
     if let Some(in_path) = in_path
     { opt.in_path = parse(&arg[in_path.0..in_path.1]) }
@@ -92,5 +103,10 @@ pub fn parse_option<S : AsRef<str>>(arg: S) -> Options{
     if let Some(color_range) = color_range
     { opt.color_range = parse(&arg[color_range.0 + 6..color_range.1]) }
 
+    if let Some(out_type) = out_type
+    { opt.out_type = parse(&arg[out_type.0 + 5..out_type.1]) }
+
     opt
 }
+
+

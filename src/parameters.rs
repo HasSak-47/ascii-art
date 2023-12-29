@@ -17,3 +17,12 @@ pub enum ColorRange{
     LumaAlpha(u8),
     RgbTransform(RgbTransform),
 }
+
+#[derive(Default, Debug, Clone, Copy, )]
+pub enum Output{
+    #[default]
+    Block,
+    Smart,
+    Braille,
+    Single(char),
+}
