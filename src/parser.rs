@@ -45,9 +45,9 @@ impl Parse for ColorRange{
 
 impl Parse for Output{
     fn parse(s: &str) -> Self {
-        if s == "smart" { return Output::Smart; }
+        if s == "ascii" { return Output::Ascii; }
         else if s == "braille" { return Output::Braille; }
-        else if s == "Block"{ return Output::Block; }
+        else if s == "block"{ return Output::Block; }
 
         let last = s.chars().nth(s.len() - 1).unwrap();
         Output::Single(last)
