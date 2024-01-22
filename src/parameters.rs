@@ -16,7 +16,19 @@ pub enum ColorRange{
     Rgba(u8),
     Luma(u8),
     LumaAlpha(u8),
-    RgbTransform(RgbTransform),
+    // RgbTransform(RgbTransform, u8),
+}
+
+impl ColorRange{
+    pub fn get_precision(&self) -> u8{
+        match self{
+            Self::Rgb(u) => *u,
+            Self::Rgba(u) => *u,
+            Self::Luma(u) => *u,
+            Self::LumaAlpha(u) => *u,
+            Self::Undefined => 8,
+        }
+    }
 }
 
 #[derive(Default, Debug, Clone, Copy, )]

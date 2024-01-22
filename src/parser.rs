@@ -30,14 +30,16 @@ impl Parse for ColorRange{
         let range_t = if let Some(p) = s.find('_'){
             &s[0..p]
         }
-        else{s};
+        else{ s };
 
-        if precision.is_none() {
-            if "rgb" == range_t { return ColorRange::Rgb(8);}
-            if "rgba" == range_t { return ColorRange::Rgba(8);}
-            if "luma" == range_t { return ColorRange::Luma(8);}
-            if "luma-alpha" == range_t { return ColorRange::LumaAlpha(8);}
+        let p_val = if let Some(p) = precision{
+            u8::from_str_radix(&s[p + 1..], 10).unwrap()
         }
+        else{ 8 };
+        if "rgb" == range_t { return ColorRange::Rgb(p_val);}
+        if "rgba" == range_t { return ColorRange::Rgba(p_val);}
+        if "luma" == range_t { return ColorRange::Luma(p_val);}
+        if "luma-alpha" == range_t { return ColorRange::LumaAlpha(p_val);}
 
         ColorRange::default()
     }
