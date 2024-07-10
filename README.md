@@ -16,12 +16,16 @@ color=
     luma-alpha   : writes a space when alpha is 0 , b&w
 type=
     ascii        : tries to make a pretty ascii art
-    singeC       : C is the character that it will write when there is color
     braille      : writes a colored braille character 
     block        : writes pure space and a color as backround
+    singeC       : C is the character that it will write when there is color
+                   if an option does not exist like 'text' it will take the last letter
 
 size=
     WidthxHeight : the size in charactes of the resulting text
 
 out=
     path: the path where the image will be written
+
+
+# Examples
