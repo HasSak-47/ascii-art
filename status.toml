@@ -5,49 +5,35 @@ edition = "0.4.1"
 
 [[todo]]
 name = "BW color art"
-status = ""
-description = ""
 priority = 4
 difficulty = 1
 
 [[todo.todo]]
 name = "BW ascii art"
-status = ""
-description = ""
 priority = 4
 difficulty = 3
 
 [[todo]]
 name = "RGBA color art"
-status = ""
-description = ""
 priority = 1
 difficulty = 2
 
 [[todo.todo]]
 name = "BW ascii art"
-status = ""
-description = ""
 priority = 4
 difficulty = 3
 
 [[todo]]
 name = "RGB color art"
-status = ""
-description = ""
 priority = 1
 difficulty = 1
 
 [[todo.todo]]
 name = "RGB ascii art"
-status = ""
-description = ""
 priority = 1
 difficulty = 3
 
 [[done]]
 name = "RGB color art"
-status = ""
-description = ""
 priority = 1
 difficulty = 3
